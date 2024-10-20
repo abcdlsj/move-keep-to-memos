@@ -10,7 +10,7 @@ This script use [memos native API](https://memos.apidocumentation.com/reference)
 - Download the python script from [this repo](https://raw.githubusercontent.com/MatthieuTinnes/move-keep-to-memos/refs/heads/main/keep2memos.py)
 - Put this script in the extracted archive, alongside Takeout folder
 - Get a token for your memos instance, in parameters menu / my account
-- Use this command with instance url and token : `python3 main.py --instance https://memos.myserver.com --token XXXX`
+- Use this command with instance url and token : `python3 keep2memos.py --instance https://memos.myserver.com --token XXXX`
 You can change the default folder with the --folder parameter
 
 
