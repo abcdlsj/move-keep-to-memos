@@ -120,6 +120,7 @@ def main():
     
     # Process the folder
     process_json_files_in_folder(DEFAULT_TAKEOUT_FOLDER)
+    print('Import successful !')
 
 if __name__ == "__main__":
     main()
