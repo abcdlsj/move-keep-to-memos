@@ -4,7 +4,7 @@ import requests
 import os
 import json
 
-DEFAULT_TAKEOUT_FOLDER = "Takeout/keep"
+DEFAULT_TAKEOUT_FOLDER = "Takeout/Keep"
 INSTANCE = ""
 TOKEN = ""
 
