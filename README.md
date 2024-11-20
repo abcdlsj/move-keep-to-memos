@@ -16,6 +16,4 @@ You can change the default folder with the --folder parameter
 
 ## What does this script import ? 
 
-This script import text and original creation date.
-
-Image are not supported for now. 
+This script import text, associated ressources, label and original creation date.
