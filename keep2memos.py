@@ -1,5 +1,5 @@
 import argparse
-from datetime import datetime
+from datetime import datetime, timezone
 import requests
 import os
 import json
@@ -10,7 +10,7 @@ INSTANCE = ""
 TOKEN = ""
 
 def timestamp_to_date(microseconds):
-    return datetime.fromtimestamp(microseconds / 1e6).strftime('%Y-%m-%dT%H:%M:%SZ')
+    return datetime.fromtimestamp(microseconds / 1e6, timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
 
 def array_to_markdown_checklist(items):
     checklist = []
