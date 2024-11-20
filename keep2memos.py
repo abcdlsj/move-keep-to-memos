@@ -19,7 +19,7 @@ def array_to_markdown_checklist(items):
         checklist.append(f"- {checkbox} {item['text']}")
     return "\n".join(checklist)
 
-def post_memo(content, resources):
+def post_memo(content):
     url = INSTANCE + "/api/v1/memos"
     
     headers = {
@@ -31,9 +31,6 @@ def post_memo(content, resources):
         "content": content,
         "visibility": "VISIBILITY_PRIVATE"
     }
-
-    if len(resources) > 0:
-        data["resources"] = resources
 
     try:
         response = requests.post(url, json=data, headers=headers)
@@ -106,6 +103,37 @@ def patch_memo(id, date, archived):
     except Exception as e:
         print(f"An error occurred when patching memo: {str(e)}")
 
+def mapResourceToMemoResource(resource,memoId):
+    return {
+        "name": resource.get("name", ""),
+        "uid": resource.get("id", ""),
+        "filename": resource.get("name", ""),
+        "type": resource.get("type", ""),
+        "size": resource.get("size", ""),
+        "memo": memoId
+    }
+def setMemosResources(memoId, resources):
+    url = f"{INSTANCE}/api/v1/memos/{memoId}/resources"
+    
+    headers = {
+        "Authorization": f"Bearer {TOKEN}",
+        "Content-Type": "application/json"
+    }
+    
+    data = {
+        "resources": resources
+    }
+
+    try:
+        response = requests.patch(url, json=data, headers=headers)
+
+        if response.status_code == 200:
+            print("Resouce added to memo successfully")
+        else:
+            print(f"Failed to add resource to memo. Status code: {response.status_code}, Response: {response.text}")
+    except Exception as e:
+        print(f"An error occurred when adding resource to memo: {str(e)}")
+
 def process_json_files_in_folder(folder_path):
     for filename in os.listdir(folder_path):
         if filename.endswith(".json"):
@@ -137,17 +165,19 @@ def process_json_files_in_folder(folder_path):
                     for label in labels:
                         memo_content += f"#{label['name']} "
 
-                attachments = data.get("attachments", [])
-                resources = []
-                for attachment in attachments:
-                    resource = create_resource(DEFAULT_TAKEOUT_FOLDER + "/" + attachment["filePath"], attachment["mimetype"])
-                    if resource:
-                        resources.append(resource)
-
-                memoId = post_memo(memo_content, resources)
+                memoId = post_memo(memo_content)
 
                 if(memoId):
                     patch_memo(memoId,date,archived)
+                    attachments = data.get("attachments", [])
+                    resources = []
+                    for attachment in attachments:
+                        resource = create_resource(DEFAULT_TAKEOUT_FOLDER + "/" + attachment["filePath"], attachment["mimetype"])
+                        if resource:
+                            memoResource = mapResourceToMemoResource(resource,memoId)
+                            resources.append(memoResource)
+                    if(len(resources) > 1 ): 
+                        setMemosResources(memoId,resources)
 
 # Define the argument parser
 def get_args():
